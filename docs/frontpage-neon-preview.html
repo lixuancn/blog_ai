@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaneBlog | Neon Preview</title>
+    <meta name="description" content="LaneBlog 前台科技感首页视觉预览（概念稿）。" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg0: #050813;
+        --bg1: #070a16;
+        --surface: rgba(255, 255, 255, 0.06);
+        --surface-strong: rgba(255, 255, 255, 0.10);
+        --border: rgba(255, 255, 255, 0.10);
+        --text: rgba(255, 255, 255, 0.92);
+        --muted: rgba(255, 255, 255, 0.66);
+        --muted2: rgba(255, 255, 255, 0.48);
+        --brand: #7c3aed;
+        --brand2: #22d3ee;
+        --good: #34d399;
+        --bad: #f97316;
+        --shadow: 0 16px 50px rgba(0, 0, 0, 0.55);
+        --ring: 0 0 0 1px rgba(255, 255, 255, 0.10), 0 0 0 6px rgba(124, 58, 237, 0.18);
+        --radius: 18px;
+        --radius2: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background: radial-gradient(1200px 700px at 12% 15%, rgba(124, 58, 237, 0.32), transparent 60%),
+          radial-gradient(900px 600px at 86% 22%, rgba(34, 211, 238, 0.20), transparent 55%),
+          radial-gradient(1100px 600px at 50% 110%, rgba(16, 185, 129, 0.12), transparent 65%),
+          linear-gradient(180deg, var(--bg0), var(--bg1));
+        color: var(--text);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", sans-serif;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+
+      .noise {
+        pointer-events: none;
+        position: fixed;
+        inset: 0;
+        opacity: 0.06;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      }
+
+      .gridlines {
+        pointer-events: none;
+        position: fixed;
+        inset: -20% -20%;
+        opacity: 0.18;
+        background:
+          linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px) 0 0 / 60px 60px,
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px) 0 0 / 60px 60px;
+        transform: rotate(-6deg);
+        filter: blur(0.2px);
+      }
+
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(14px);
+        background: linear-gradient(180deg, rgba(5, 8, 19, 0.82), rgba(5, 8, 19, 0.52));
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .navshell {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 0;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 800;
+        letter-spacing: 0.2px;
+      }
+
+      .brand-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: radial-gradient(12px 12px at 30% 30%, rgba(255, 255, 255, 0.55), transparent 60%),
+          linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(34, 211, 238, 0.8));
+        box-shadow: 0 12px 28px rgba(124, 58, 237, 0.22), 0 10px 26px rgba(34, 211, 238, 0.14);
+      }
+
+      .brand-title {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+
+      .brand-title strong {
+        font-size: 15px;
+      }
+
+      .brand-title span {
+        font-size: 12px;
+        color: var(--muted2);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav a {
+        position: relative;
+        padding: 10px 12px;
+        border-radius: 999px;
+        color: rgba(255, 255, 255, 0.86);
+        transition: background 180ms ease, color 180ms ease;
+      }
+
+      .nav a:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.96);
+      }
+
+      .nav .has-sub {
+        position: relative;
+      }
+
+      .nav .sub {
+        position: absolute;
+        top: 46px;
+        left: 0;
+        min-width: 210px;
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(18, 20, 34, 0.78);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(16px);
+        box-shadow: var(--shadow);
+        display: none;
+      }
+
+      .nav .has-sub:hover .sub,
+      .nav .has-sub:focus-within .sub {
+        display: block;
+      }
+
+      .nav .sub a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        border-radius: 12px;
+      }
+
+      .chip {
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        color: rgba(255, 255, 255, 0.74);
+      }
+
+      .nav-toggle {
+        display: none;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.92);
+        border-radius: 12px;
+        padding: 10px 12px;
+      }
+
+      .hero {
+        padding: 46px 0 18px;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-size: clamp(34px, 5vw, 54px);
+        letter-spacing: -0.8px;
+      }
+
+      .hero h1 .glow {
+        background: linear-gradient(90deg, rgba(124, 58, 237, 1), rgba(34, 211, 238, 1));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 0 22px rgba(124, 58, 237, 0.35);
+      }
+
+      .hero p {
+        margin: 12px 0 0;
+        max-width: 800px;
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 15px;
+      }
+
+      .hero-actions {
+        margin-top: 18px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+        transition: transform 120ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      .btn.primary {
+        border-color: rgba(124, 58, 237, 0.35);
+        background: linear-gradient(90deg, rgba(124, 58, 237, 0.75), rgba(34, 211, 238, 0.60));
+        box-shadow: 0 16px 36px rgba(124, 58, 237, 0.18), 0 16px 36px rgba(34, 211, 238, 0.10);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 2.3fr) minmax(280px, 1fr);
+        gap: 22px;
+        padding: 18px 0 48px;
+      }
+
+      .card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05));
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 14px;
+        color: rgba(255, 255, 255, 0.86);
+        font-weight: 800;
+        letter-spacing: 0.2px;
+      }
+
+      .section-title small {
+        color: var(--muted2);
+        font-weight: 600;
+      }
+
+      .post {
+        padding: 18px 18px 16px;
+      }
+
+      .post + .post {
+        margin-top: 14px;
+      }
+
+      .post .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        color: var(--muted2);
+        font-size: 13px;
+      }
+
+      .post h2 {
+        margin: 10px 0 8px;
+        font-size: 20px;
+        line-height: 1.25;
+      }
+
+      .post h2 a {
+        color: rgba(255, 255, 255, 0.94);
+      }
+
+      .post h2 a:hover {
+        color: rgba(34, 211, 238, 0.95);
+      }
+
+      .post .desc {
+        margin: 0 0 10px;
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 14px;
+      }
+
+      .post .preview {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.62);
+        font-size: 13px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .tag {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        color: rgba(255, 255, 255, 0.72);
+        background: rgba(255, 255, 255, 0.05);
+        font-size: 12px;
+      }
+
+      .tag.hot {
+        border-color: rgba(34, 211, 238, 0.28);
+        background: rgba(34, 211, 238, 0.12);
+      }
+
+      .post-footer {
+        margin-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .readmore {
+        font-weight: 800;
+        color: rgba(255, 255, 255, 0.92);
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        transition: transform 120ms ease, background 180ms ease;
+      }
+
+      .readmore:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .side {
+        padding: 18px;
+      }
+
+      .recommend {
+        padding: 14px;
+        border-radius: 16px;
+        background: rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+      }
+
+      .recommend ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .recommend li + li {
+        margin-top: 10px;
+      }
+
+      .recommend a {
+        display: block;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.86);
+        transition: transform 120ms ease, background 180ms ease, border-color 180ms ease;
+      }
+
+      .recommend a:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(34, 211, 238, 0.22);
+      }
+
+      .pager {
+        margin-top: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .pager-left {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.70);
+        font-size: 13px;
+        flex: 0 0 auto;
+      }
+
+      .pager-right {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+      }
+
+      .pbtn {
+        height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.90);
+        font-weight: 800;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform 120ms ease, background 180ms ease;
+        flex: 0 0 auto;
+      }
+
+      .pbtn:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .pbtn.disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .pages {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+        min-width: 0;
+      }
+
+      .page {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.88);
+        font-weight: 900;
+        font-size: 12px;
+        flex: 0 0 auto;
+      }
+
+      .page.active {
+        background: linear-gradient(90deg, rgba(124, 58, 237, 0.85), rgba(34, 211, 238, 0.62));
+        border-color: rgba(34, 211, 238, 0.25);
+        box-shadow: 0 10px 24px rgba(124, 58, 237, 0.18), 0 10px 24px rgba(34, 211, 238, 0.10);
+      }
+
+      .page.ellipsis {
+        border: 0;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.45);
+        width: auto;
+        padding: 0 2px;
+      }
+
+      .footer {
+        padding: 0 0 36px;
+        color: rgba(255, 255, 255, 0.54);
+        text-align: right;
+      }
+
+      .footer a {
+        color: rgba(255, 255, 255, 0.62);
+      }
+
+      .footer a:hover {
+        color: rgba(34, 211, 238, 0.92);
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .side {
+          order: 2;
+        }
+      }
+
+      @media (max-width: 820px) {
+        .nav-toggle {
+          display: inline-flex;
+        }
+        .nav {
+          display: none;
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 6px;
+          padding: 10px 0 6px;
+        }
+        .nav.is-open {
+          display: flex;
+        }
+        .nav .sub {
+          position: static;
+          display: block;
+          margin-top: 6px;
+          background: rgba(255, 255, 255, 0.04);
+        }
+        .pager-right {
+          overflow-x: auto;
+          padding-bottom: 2px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="gridlines"></div>
+    <div class="noise"></div>
+
+    <header class="header">
+      <div class="container navshell">
+        <a class="brand" href="#" aria-label="LaneBlog">
+          <span class="brand-badge" aria-hidden="true"></span>
+          <span class="brand-title">
+            <strong>LaneBlog</strong>
+            <span>Neon SSR Preview</span>
+          </span>
+        </a>
+
+        <button class="nav-toggle" type="button" data-nav-toggle>菜单</button>
+
+        <nav class="nav" data-nav>
+          <a href="#">首页</a>
+          <div class="has-sub">
+            <a href="#" aria-haspopup="true">后端</a>
+            <div class="sub" role="menu">
+              <a href="#" role="menuitem">Go <span class="chip">new</span></a>
+              <a href="#" role="menuitem">MySQL <span class="chip">hot</span></a>
+              <a href="#" role="menuitem">系统设计 <span class="chip">lab</span></a>
+            </div>
+          </div>
+          <div class="has-sub">
+            <a href="#" aria-haspopup="true">前端</a>
+            <div class="sub" role="menu">
+              <a href="#" role="menuitem">SSR <span class="chip">fast</span></a>
+              <a href="#" role="menuitem">性能 <span class="chip">perf</span></a>
+            </div>
+          </div>
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="container">
+        <h1><span class="glow">LaneBlog</span></h1>
+        <p>每一个没有起舞的日子都是在辜负生命。用更锐利的排版、更强的对比、更干净的层次，把内容做得像代码一样清晰。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#">开始阅读</a>
+          <a class="btn" href="#">订阅更新</a>
+          <a class="btn" href="#">关于我</a>
+        </div>
+      </div>
+    </section>
+
+    <main class="container layout">
+      <section>
+        <div class="section-title">
+          <span>最新文章</span>
+          <small>按时间倒序</small>
+        </div>
+
+        <article class="card post">
+          <div class="meta">
+            <span>2026-04-13</span>
+            <span>作者 lane</span>
+            <span>分类：后端 / Go</span>
+          </div>
+          <h2><a href="#">Go SSR 在内容站点的最佳实践</a></h2>
+          <p class="desc">从数据层到模板层，构建一个 SEO 友好、体验流畅、部署简单的博客前台。</p>
+          <p class="preview">正文预览（前 100 字）：服务端渲染并不意味着“老旧”，关键在于设计语言与交互细节。我们用玻璃拟态、霓虹边缘光与...</p>
+          <div class="post-footer">
+            <div class="tags">
+              <span class="tag hot">SSR</span>
+              <span class="tag">Go</span>
+              <span class="tag">SEO</span>
+            </div>
+            <a class="readmore" href="#">阅读全文</a>
+          </div>
+        </article>
+
+        <article class="card post">
+          <div class="meta">
+            <span>2026-04-12</span>
+            <span>作者 lane</span>
+            <span>分类：后端 / MySQL</span>
+          </div>
+          <h2><a href="#">MySQL utf8mb4 与 collation 的坑</a></h2>
+          <p class="desc">字符集统一是长期收益最高的工程决策之一。</p>
+          <p class="preview">正文预览（前 100 字）：排序规则、索引长度、连接参数、表结构迁移，每一步都可能踩坑。本文给出可复制的迁移顺序...</p>
+          <div class="post-footer">
+            <div class="tags">
+              <span class="tag hot">utf8mb4</span>
+              <span class="tag">MySQL</span>
+              <span class="tag">实践</span>
+            </div>
+            <a class="readmore" href="#">阅读全文</a>
+          </div>
+        </article>
+
+        <article class="card post">
+          <div class="meta">
+            <span>2026-04-10</span>
+            <span>作者 lane</span>
+            <span>分类：工程 / 架构</span>
+          </div>
+          <h2><a href="#">从 0 到 1 的管理后台：如何设计数据流</a></h2>
+          <p class="desc">把“可维护”当成第一目标，接口会更清晰。</p>
+          <p class="preview">正文预览（前 100 字）：当表结构固定时，我们需要通过服务层约束一致性。分类删除限制、标签统计同步、推荐位策略...</p>
+          <div class="post-footer">
+            <div class="tags">
+              <span class="tag">后台</span>
+              <span class="tag">数据流</span>
+              <span class="tag">规范</span>
+            </div>
+            <a class="readmore" href="#">阅读全文</a>
+          </div>
+        </article>
+
+        <nav class="card pager" aria-label="分页预览">
+          <div class="pager-left">第 10 / 11 页 · 共 103 篇</div>
+          <div class="pager-right">
+            <a class="pbtn" href="#" aria-label="上一页">上一页</a>
+            <div class="pages" aria-label="页码">
+              <a class="page" href="#">1</a>
+              <span class="page ellipsis">...</span>
+              <a class="page" href="#">7</a>
+              <a class="page" href="#">8</a>
+              <a class="page" href="#">9</a>
+              <span class="page active">10</span>
+              <a class="page" href="#">11</a>
+            </div>
+            <a class="pbtn" href="#" aria-label="下一页">下一页</a>
+          </div>
+        </nav>
+      </section>
+
+      <aside class="card side">
+        <div class="section-title">
+          <span>全站推荐</span>
+          <small>只显示标题</small>
+        </div>
+        <div class="recommend">
+          <ul>
+            <li><a href="#">Go 并发模型的“正确打开方式”</a></li>
+            <li><a href="#">从 MyISAM 到 InnoDB 的迁移策略</a></li>
+            <li><a href="#">用最少 JS 做最酷的交互</a></li>
+            <li><a href="#">SEO 与工程化并不冲突</a></li>
+            <li><a href="#">日志、指标、追踪：三件套怎么落</a></li>
+            <li><a href="#">我如何写一篇可复用的技术文章</a></li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="container footer">
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a>
+    </footer>
+
+    <script>
+      (function () {
+        var toggle = document.querySelector("[data-nav-toggle]");
+        var nav = document.querySelector("[data-nav]");
+        if (!toggle || !nav) return;
+
+        toggle.addEventListener("click", function () {
+          nav.classList.toggle("is-open");
+        });
+      })();
+    </script>
+  </body>
+</html>

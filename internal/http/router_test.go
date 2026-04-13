@@ -205,6 +205,9 @@ func TestFrontPagesAndAPIs(t *testing.T) {
 	if !strings.Contains(homeBody, "LaneBlog") || !strings.Contains(homeBody, "每一个没有起舞的日子都是在辜负生命。") {
 		t.Fatalf("unexpected home body: %s", homeBody)
 	}
+	if strings.Contains(homeBody, "Future Editorial Surface") || strings.Contains(homeBody, "preview / v3") {
+		t.Fatalf("expected home hero to remove legacy labels, body=%s", homeBody)
+	}
 	if strings.Index(homeBody, "第12篇") > strings.Index(homeBody, "第11篇") {
 		t.Fatalf("expected articles sorted by time desc, body=%s", homeBody)
 	}
@@ -238,6 +241,9 @@ func TestFrontPagesAndAPIs(t *testing.T) {
 	articleBody := articleRec.Body.String()
 	if !strings.Contains(articleBody, "点击：<strong data-clicks-num>6</strong>") {
 		t.Fatalf("expected clicks incremented in article page, body=%s", articleBody)
+	}
+	if strings.Contains(articleBody, "每一个没有起舞的日子都是在辜负生命。") {
+		t.Fatalf("expected article page without home hero, body=%s", articleBody)
 	}
 
 	voteRec := performJSONRequest(router, http.MethodPost, "/api/v1/front/articles/1/good", []byte(`{}`), "")

@@ -1,11 +1,14 @@
 {{define "category_page"}}
 {{template "site_header" .}}
-<main class="container page-grid">
+<main class="wrap page-grid">
   <section class="content-area">
-    <div class="section-title">分类文章</div>
+    <div class="feed glass">
+      <div class="section-head">
+        <strong>分类文章</strong>
+      </div>
     {{if .Articles}}
       {{range .Articles}}
-      <article class="article-card card">
+      <article class="article-card post">
         <div class="article-meta">
           <span>{{formatUnix .CTime}}</span>
           <span>作者：{{.Author}}</span>
@@ -23,8 +26,9 @@
       </article>
       {{end}}
     {{else}}
-      <div class="card empty-state">当前分类下暂无文章</div>
+      <div class="empty-state">当前分类下暂无文章</div>
     {{end}}
+    </div>
   </section>
   {{template "sidebar" .}}
 </main>

@@ -9,40 +9,42 @@
   <meta name="keywords" content="{{.SEO.Keywords}}">
   <link rel="stylesheet" href="/assets/front.css">
 </head>
-<body>
-  <header class="site-header">
-    <div class="nav-shell">
-      <a class="brand" href="/">{{.Site.Title}}</a>
-      <button class="nav-toggle" type="button" aria-label="切换导航" data-nav-toggle>菜单</button>
-      <nav class="site-nav" data-nav-panel>
-        <ul class="nav-list">
+<body class="front-body">
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="/" aria-label="{{.Site.Title}}">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="brand-letter">L</span>
+        </span>
+        <span class="brand-copy">
+          <strong>{{.Site.Title}}</strong>
+        </span>
+      </a>
+      <button class="menu-btn" type="button" aria-label="切换导航" data-nav-toggle>菜单</button>
+      <nav class="nav" data-nav-panel>
           {{range .Navigation}}
-          <li class="nav-item{{if .Children}} has-children{{end}}">
+          <div class="nav-item{{if .Children}} has-children{{end}}">
             <a href="{{.Href}}" {{if .External}}target="_blank" rel="noopener noreferrer"{{end}}>{{.Name}}</a>
             {{if .Children}}
-            <ul class="nav-sublist">
+            <div class="nav-sub">
               {{range .Children}}
-              <li><a href="{{.Href}}" {{if .External}}target="_blank" rel="noopener noreferrer"{{end}}>{{.Name}}</a></li>
+              <a href="{{.Href}}" {{if .External}}target="_blank" rel="noopener noreferrer"{{end}}>
+                <span>{{.Name}}</span>
+                <span class="nav-pill">Sub</span>
+              </a>
               {{end}}
-            </ul>
+            </div>
             {{end}}
-          </li>
+          </div>
           {{end}}
-        </ul>
       </nav>
     </div>
-    <section class="hero">
-      <div class="container">
-        <h1>{{.HeroTitle}}</h1>
-        <p>{{.HeroSubtitle}}</p>
-      </div>
-    </section>
   </header>
 {{end}}
 
 {{define "site_footer"}}
   <footer class="site-footer">
-    <div class="container">
+    <div class="wrap">
       <p><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a></p>
     </div>
   </footer>
@@ -52,12 +54,18 @@
 {{end}}
 
 {{define "sidebar"}}
-<aside class="sidebar card">
-  <div class="section-title">推荐阅读</div>
+<aside class="sidebar glass" id="recommend-stream">
+  <div class="section-head">
+    <strong>推荐内容</strong>
+  </div>
   {{if .Recommendations}}
   <ul class="recommend-list">
     {{range .Recommendations}}
-    <li><a href="{{.Link}}">{{.Title}}</a></li>
+    <li>
+      <a class="recommend-link" href="{{.Link}}">
+        <strong>{{.Title}}</strong>
+      </a>
+    </li>
     {{end}}
   </ul>
   {{else}}

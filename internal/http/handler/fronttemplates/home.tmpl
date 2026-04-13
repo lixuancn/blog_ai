@@ -1,11 +1,22 @@
 {{define "home_page"}}
 {{template "site_header" .}}
-<main class="container page-grid">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-panel">
+      <h1><span>{{.HeroTitle}}</span></h1>
+      <p>{{.HeroSubtitle}}</p>
+    </div>
+  </div>
+</section>
+<main class="wrap page-grid">
   <section class="content-area">
-    <div class="section-title">最新文章</div>
+    <div class="feed glass">
+      <div class="section-head" id="content-stream">
+        <strong>最新文章</strong>
+      </div>
     {{if .Articles}}
       {{range .Articles}}
-      <article class="article-card card">
+      <article class="article-card post">
         <div class="article-meta">
           <span>{{formatUnix .CTime}}</span>
           <span>作者：{{.Author}}</span>
@@ -23,31 +34,32 @@
       </article>
       {{end}}
     {{else}}
-      <div class="card empty-state">暂无文章内容</div>
+      <div class="empty-state">暂无文章内容</div>
     {{end}}
-    <nav class="pager card" aria-label="分页导航">
-      <div class="pager-summary">{{.Pagination.Page}} / {{.Pagination.TotalPages}} · 共 {{.Pagination.Total}} 篇</div>
+    </div>
+    <nav class="pager glass" aria-label="分页导航">
+      <div class="pager-info">{{.Pagination.Page}} / {{.Pagination.TotalPages}} · {{.Pagination.Total}} posts</div>
       <div class="pager-main">
         {{if .Pagination.HasPrev}}
-        <a class="pager-link" href="/?page={{.Pagination.PrevPage}}" aria-label="上一页">上一页</a>
+        <a class="pager-btn" href="/?page={{.Pagination.PrevPage}}" aria-label="上一页">上一页</a>
         {{else}}
-        <span class="pager-link disabled">上一页</span>
+        <span class="pager-btn disabled">上一页</span>
         {{end}}
         <div class="pager-pages">
           {{range .Pagination.Items}}
             {{if .IsEllipsis}}
-            <span class="pager-page pager-ellipsis">...</span>
+            <span class="page ellipsis">...</span>
             {{else if .Active}}
-            <span class="pager-page is-active">{{.Label}}</span>
+            <span class="page active">{{.Label}}</span>
             {{else}}
-            <a class="pager-page" href="/?page={{.Page}}">{{.Label}}</a>
+            <a class="page" href="/?page={{.Page}}">{{.Label}}</a>
             {{end}}
           {{end}}
         </div>
         {{if .Pagination.HasNext}}
-        <a class="pager-link" href="/?page={{.Pagination.NextPage}}" aria-label="下一页">下一页</a>
+        <a class="pager-btn" href="/?page={{.Pagination.NextPage}}" aria-label="下一页">下一页</a>
         {{else}}
-        <span class="pager-link disabled">下一页</span>
+        <span class="pager-btn disabled">下一页</span>
         {{end}}
       </div>
     </nav>

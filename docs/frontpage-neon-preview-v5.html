@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaneBlog | V5 Cyber Terminal Preview</title>
+    <meta name="description" content="LaneBlog 前台视觉概念稿 v5，游戏/终端风赛博版本。" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #04070d;
+        --bg2: #060a12;
+        --panel: rgba(8, 12, 22, 0.88);
+        --panel-2: rgba(11, 17, 30, 0.92);
+        --line: rgba(0, 255, 179, 0.16);
+        --line-strong: rgba(0, 255, 179, 0.34);
+        --text: #eafffb;
+        --muted: rgba(174, 255, 231, 0.66);
+        --muted2: rgba(174, 255, 231, 0.42);
+        --green: #00ffb3;
+        --green-soft: rgba(0, 255, 179, 0.10);
+        --cyan: #00d5ff;
+        --pink: #ff43b5;
+        --orange: #ff9c2f;
+        --shadow: 0 20px 60px rgba(0, 0, 0, 0.54);
+        --radius-xl: 20px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        background:
+          radial-gradient(900px 500px at 15% 0%, rgba(0, 255, 179, 0.10), transparent 55%),
+          radial-gradient(900px 500px at 85% 12%, rgba(0, 213, 255, 0.10), transparent 58%),
+          linear-gradient(180deg, var(--bg), var(--bg2));
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px) 0 0 / 100% 3px,
+          linear-gradient(to right, rgba(0, 255, 179, 0.03) 1px, transparent 1px) 0 0 / 56px 56px,
+          linear-gradient(to bottom, rgba(0, 255, 179, 0.02) 1px, transparent 1px) 0 0 / 56px 56px;
+        mix-blend-mode: screen;
+        opacity: 0.36;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1240px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .panel {
+        background: linear-gradient(180deg, var(--panel), var(--panel-2));
+        border: 1px solid var(--line);
+        box-shadow: inset 0 0 0 1px rgba(0, 255, 179, 0.04), var(--shadow);
+        position: relative;
+      }
+
+      .panel::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(0,255,179,0.04), transparent 18%, transparent 82%, rgba(0,213,255,0.04));
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: rgba(4, 7, 13, 0.88);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 255, 179, 0.12);
+      }
+
+      .topbar-inner {
+        min-height: 74px;
+        display: grid;
+        grid-template-columns: 260px 1fr 220px;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid rgba(0,255,179,0.24);
+        background:
+          linear-gradient(135deg, rgba(0,255,179,0.14), rgba(0,213,255,0.06)),
+          linear-gradient(180deg, rgba(255,255,255,0.04), transparent);
+        box-shadow: 0 0 24px rgba(0,255,179,0.10);
+        position: relative;
+      }
+
+      .brand-mark::before,
+      .brand-mark::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 1px solid rgba(0,255,179,0.24);
+        border-radius: 8px;
+      }
+
+      .brand-mark::after {
+        inset: 13px;
+        border-color: rgba(0,213,255,0.22);
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.02;
+      }
+
+      .brand-copy strong {
+        color: var(--green);
+        font-size: 15px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-copy span {
+        margin-top: 4px;
+        color: var(--muted2);
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-item > a {
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        color: rgba(234, 255, 251, 0.84);
+      }
+
+      .nav-item > a:hover {
+        border-color: rgba(0,255,179,0.18);
+        background: rgba(0,255,179,0.05);
+        color: var(--green);
+      }
+
+      .nav-sub {
+        display: none;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        min-width: 220px;
+        padding: 10px;
+        border-radius: 14px;
+        background: rgba(6, 10, 18, 0.96);
+        border: 1px solid rgba(0,255,179,0.14);
+        box-shadow: var(--shadow);
+      }
+
+      .nav-item:hover .nav-sub,
+      .nav-item:focus-within .nav-sub {
+        display: block;
+      }
+
+      .nav-sub a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 10px;
+      }
+
+      .nav-sub a:hover {
+        background: rgba(0,255,179,0.05);
+      }
+
+      .code {
+        font-size: 11px;
+        color: var(--muted2);
+      }
+
+      .signal {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .signal-card {
+        height: 40px;
+        padding: 0 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,255,179,0.14);
+        background: rgba(0,255,179,0.04);
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .signal-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--green);
+        box-shadow: 0 0 18px rgba(0,255,179,0.48), 0 0 0 8px rgba(0,255,179,0.08);
+      }
+
+      .hero {
+        padding: 32px 0 12px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) 320px;
+        gap: 20px;
+      }
+
+      .hero-main,
+      .hero-side,
+      .feed,
+      .sidebar,
+      .pager {
+        border-radius: var(--radius-xl);
+      }
+
+      .hero-main {
+        padding: 28px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--green);
+        font-size: 12px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 28px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(0,255,179,0), rgba(0,255,179,1));
+      }
+
+      .hero h1 {
+        margin: 18px 0 14px;
+        font-size: clamp(38px, 6vw, 74px);
+        line-height: 0.92;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+      }
+
+      .hero h1 span {
+        display: block;
+        color: var(--green);
+        text-shadow: 0 0 24px rgba(0,255,179,0.18);
+      }
+
+      .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        max-width: 760px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .btn {
+        height: 42px;
+        padding: 0 14px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,255,179,0.14);
+        background: rgba(0,255,179,0.04);
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .btn.primary {
+        background: linear-gradient(90deg, rgba(0,255,179,0.16), rgba(0,213,255,0.14));
+        box-shadow: inset 0 0 18px rgba(0,255,179,0.06), 0 0 22px rgba(0,255,179,0.10);
+      }
+
+      .hero-side {
+        padding: 18px;
+      }
+
+      .metric-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .metric-head strong {
+        color: var(--green);
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .metric-head span {
+        color: var(--muted2);
+        font-size: 11px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .metric {
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.03);
+      }
+
+      .metric small {
+        display: block;
+        color: var(--muted2);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 12px;
+        font-size: 24px;
+        color: var(--green);
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: minmax(0, 2.1fr) minmax(290px, 0.95fr);
+        gap: 20px;
+        padding: 18px 0 48px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .section-head strong {
+        color: var(--green);
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .section-head span {
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .feed {
+        padding: 18px;
+      }
+
+      .post {
+        padding: 18px;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.025);
+      }
+
+      .post + .post {
+        margin-top: 14px;
+      }
+
+      .post-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .post h2 {
+        margin: 12px 0 10px;
+        font-size: 22px;
+        line-height: 1.2;
+        text-transform: uppercase;
+      }
+
+      .post h2 a:hover {
+        color: var(--green);
+      }
+
+      .post .desc {
+        margin: 0;
+        color: rgba(234,255,251,0.80);
+        font-size: 14px;
+      }
+
+      .post .preview {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .post-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.04);
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .readmore {
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.04);
+        font-weight: 700;
+      }
+
+      .sidebar {
+        padding: 18px;
+      }
+
+      .recommend-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .recommend-list li + li {
+        margin-top: 10px;
+      }
+
+      .recommend-link {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.03);
+      }
+
+      .recommend-link:hover {
+        background: rgba(0,255,179,0.05);
+      }
+
+      .recommend-link strong {
+        display: block;
+        line-height: 1.45;
+      }
+
+      .recommend-link span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .pager {
+        margin-top: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .pager-info {
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        flex: 0 0 auto;
+      }
+
+      .pager-main {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .pager-btn {
+        height: 36px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.04);
+        color: var(--text);
+        font-weight: 700;
+        font-size: 12px;
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pager-pages {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+      }
+
+      .page {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.04);
+        color: var(--text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+      }
+
+      .page.active {
+        background: linear-gradient(90deg, rgba(0,255,179,0.16), rgba(0,213,255,0.16));
+        color: var(--green);
+        box-shadow: inset 0 0 18px rgba(0,255,179,0.06), 0 0 18px rgba(0,255,179,0.08);
+      }
+
+      .page.ellipsis {
+        min-width: auto;
+        padding: 0 4px;
+        background: transparent;
+        border: 0;
+        color: var(--muted2);
+      }
+
+      .footer {
+        padding: 0 0 36px;
+        text-align: right;
+        color: var(--muted2);
+      }
+
+      .footer a {
+        color: var(--muted);
+      }
+
+      .footer a:hover {
+        color: var(--green);
+      }
+
+      .menu-btn {
+        display: none;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(0,255,179,0.12);
+        background: rgba(0,255,179,0.04);
+        color: var(--text);
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .main {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 880px) {
+        .topbar-inner {
+          grid-template-columns: 1fr auto;
+        }
+        .signal {
+          display: none;
+        }
+        .menu-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .nav {
+          display: none;
+          grid-column: 1 / -1;
+          flex-direction: column;
+          align-items: stretch;
+          padding: 10px 0 6px;
+        }
+        .nav.is-open {
+          display: flex;
+        }
+        .nav-sub {
+          position: static;
+          display: block;
+          margin-top: 6px;
+        }
+        .pager-main {
+          overflow-x: auto;
+          padding-bottom: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <a class="brand" href="#" aria-label="LaneBlog">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <strong>LaneBlog</strong>
+            <span>Cyber Terminal</span>
+          </span>
+        </a>
+
+        <button class="menu-btn" type="button" data-nav-toggle>菜单</button>
+
+        <nav class="nav" data-nav>
+          <div class="nav-item"><a href="#">首页</a></div>
+          <div class="nav-item">
+            <a href="#">后端</a>
+            <div class="nav-sub">
+              <a href="#">Go <span class="code">core</span></a>
+              <a href="#">MySQL <span class="code">data</span></a>
+              <a href="#">架构 <span class="code">infra</span></a>
+            </div>
+          </div>
+          <div class="nav-item">
+            <a href="#">前端</a>
+            <div class="nav-sub">
+              <a href="#">SSR <span class="code">render</span></a>
+              <a href="#">性能 <span class="code">perf</span></a>
+            </div>
+          </div>
+          <div class="nav-item"><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+        </nav>
+
+        <div class="signal">
+          <div class="signal-card"><span class="signal-dot"></span>sys / v5</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-main panel">
+          <div class="eyebrow">Interactive Knowledge Console</div>
+          <h1>
+            <span>LaneBlog</span>
+            游戏 / 终端风赛博版本
+          </h1>
+          <p>这一版完全走向另一端：像游戏 HUD、像任务终端、像黑客控制台。它不是高级官网感，而是偏沉浸式、强氛围、强个性化的赛博体验。</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#">enter stream</a>
+            <a class="btn" href="#">open archive</a>
+            <a class="btn" href="#">sync feed</a>
+          </div>
+        </div>
+
+        <aside class="hero-side panel">
+          <div class="metric-head">
+            <strong>system status</strong>
+            <span>online</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <small>articles</small>
+              <strong>103</strong>
+            </div>
+            <div class="metric">
+              <small>tags</small>
+              <strong>87</strong>
+            </div>
+            <div class="metric">
+              <small>featured</small>
+              <strong>12</strong>
+            </div>
+            <div class="metric">
+              <small>latency</small>
+              <strong>86ms</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main class="wrap main">
+      <section>
+        <div class="section-head">
+          <strong>latest stream</strong>
+          <span>protocol / desc / preview</span>
+        </div>
+
+        <div class="feed panel">
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-13</span>
+              <span>lane</span>
+              <span>backend / go</span>
+            </div>
+            <h2><a href="#">go ssr 在内容型站点中的最佳实践</a></h2>
+            <p class="desc">不是温和，不是克制，而是直接把博客做成一个可交互的信息控制台。</p>
+            <p class="preview">这一版强调“沉浸感”和“个性化”。扫描线、荧光描边、终端字体、HUD 模块分区，会让整个博客看起来更像未来世界里的知识终端。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">ssr</span>
+                <span class="tag">go</span>
+                <span class="tag">cyber</span>
+              </div>
+              <a class="readmore" href="#">read node</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-12</span>
+              <span>lane</span>
+              <span>database / mysql</span>
+            </div>
+            <h2><a href="#">utf8mb4 与 collation 的统一迁移方案</a></h2>
+            <p class="desc">当页面足够有个性时，技术内容反而会更像“任务情报”。</p>
+            <p class="preview">v5 的目标不是日常化，而是制造氛围。它更适合做一个鲜明、有辨识度、甚至有些“游戏化”的个人技术博客。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">mysql</span>
+                <span class="tag">utf8mb4</span>
+              </div>
+              <a class="readmore" href="#">read node</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-10</span>
+              <span>lane</span>
+              <span>design / front</span>
+            </div>
+            <h2><a href="#">为什么赛博版本要像“可执行界面”</a></h2>
+            <p class="desc">真正好看的赛博风，不只是配色，而是界面语言的一致性。</p>
+            <p class="preview">从导航到分页，从推荐列表到正文区，如果都像任务面板和终端节点，整站才会有统一世界观。这是 v5 和前几版最本质的区别。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">design</span>
+                <span class="tag">hud</span>
+              </div>
+              <a class="readmore" href="#">read node</a>
+            </div>
+          </article>
+        </div>
+
+        <nav class="pager panel" aria-label="pagination preview">
+          <div class="pager-info">10 / 11 · 103 records</div>
+          <div class="pager-main">
+            <a class="pager-btn" href="#">prev</a>
+            <div class="pager-pages">
+              <a class="page" href="#">1</a>
+              <span class="page ellipsis">...</span>
+              <a class="page" href="#">7</a>
+              <a class="page" href="#">8</a>
+              <a class="page" href="#">9</a>
+              <span class="page active">10</span>
+              <a class="page" href="#">11</a>
+            </div>
+            <a class="pager-btn" href="#">next</a>
+          </div>
+        </nav>
+      </section>
+
+      <aside class="sidebar panel">
+        <div class="section-head">
+          <strong>featured</strong>
+          <span>protocol = 1</span>
+        </div>
+        <ul class="recommend-list">
+          <li><a class="recommend-link" href="#"><strong>go 并发模型中的共享状态问题</strong><span>feed / 01</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>从后台到前台：统一 viewmodel 的价值</strong><span>feed / 02</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>如何把博客做成未来知识终端</strong><span>feed / 03</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>赛博风格页面为何需要信息秩序</strong><span>feed / 04</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>扫描线、荧光、终端字如何统一</strong><span>feed / 05</span></a></li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer class="wrap footer">
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a>
+    </footer>
+
+    <script>
+      (function () {
+        var toggle = document.querySelector("[data-nav-toggle]");
+        var nav = document.querySelector("[data-nav]");
+        if (!toggle || !nav) return;
+        toggle.addEventListener("click", function () {
+          nav.classList.toggle("is-open");
+        });
+      })();
+    </script>
+  </body>
+</html>

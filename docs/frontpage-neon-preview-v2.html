@@ -1,0 +1,867 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaneBlog | Quantum Preview</title>
+    <meta name="description" content="LaneBlog 前台科技感首页视觉预览第二版（Quantum HUD 概念稿）。" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #03060c;
+        --bg2: #07101f;
+        --panel: rgba(10, 18, 34, 0.78);
+        --panel-2: rgba(8, 15, 28, 0.88);
+        --line: rgba(94, 234, 212, 0.16);
+        --line-strong: rgba(94, 234, 212, 0.34);
+        --cyan: #5eead4;
+        --blue: #38bdf8;
+        --violet: #818cf8;
+        --text: rgba(236, 254, 255, 0.92);
+        --muted: rgba(191, 219, 254, 0.62);
+        --muted2: rgba(191, 219, 254, 0.42);
+        --shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+        --radius: 18px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(900px 500px at 20% 0%, rgba(56, 189, 248, 0.15), transparent 60%),
+          radial-gradient(900px 700px at 85% 10%, rgba(129, 140, 248, 0.10), transparent 55%),
+          linear-gradient(180deg, #02050a, #040812 55%, #040914);
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(to right, rgba(94, 234, 212, 0.04) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(94, 234, 212, 0.03) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(20px);
+        background: linear-gradient(180deg, rgba(3, 6, 12, 0.88), rgba(3, 6, 12, 0.56));
+        border-bottom: 1px solid rgba(94, 234, 212, 0.10);
+      }
+
+      .topbar-inner {
+        display: grid;
+        grid-template-columns: 260px 1fr 160px;
+        align-items: center;
+        gap: 20px;
+        min-height: 76px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .logo-mark {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        position: relative;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(94, 234, 212, 0.06));
+        border: 1px solid rgba(94, 234, 212, 0.22);
+        box-shadow: inset 0 0 20px rgba(94, 234, 212, 0.08), 0 0 24px rgba(56, 189, 248, 0.14);
+      }
+
+      .logo-mark::before,
+      .logo-mark::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border: 1px solid rgba(94, 234, 212, 0.28);
+        border-radius: 8px;
+      }
+
+      .logo-mark::after {
+        inset: 13px;
+        border-color: rgba(56, 189, 248, 0.28);
+      }
+
+      .logo-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.05;
+      }
+
+      .logo-copy strong {
+        font-size: 15px;
+        letter-spacing: 0.8px;
+      }
+
+      .logo-copy span {
+        margin-top: 4px;
+        color: var(--muted2);
+        font-size: 11px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav > .nav-item > a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        color: rgba(236, 254, 255, 0.82);
+        transition: all 160ms ease;
+      }
+
+      .nav > .nav-item > a:hover {
+        color: var(--text);
+        border-color: rgba(94, 234, 212, 0.14);
+        background: rgba(94, 234, 212, 0.05);
+      }
+
+      .nav-sub {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        min-width: 220px;
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(6, 12, 24, 0.94);
+        border: 1px solid rgba(94, 234, 212, 0.14);
+        box-shadow: var(--shadow);
+        display: none;
+      }
+
+      .nav-item:hover .nav-sub,
+      .nav-item:focus-within .nav-sub {
+        display: block;
+      }
+
+      .nav-sub a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        border-radius: 12px;
+        color: rgba(236, 254, 255, 0.84);
+      }
+
+      .nav-sub a:hover {
+        background: rgba(94, 234, 212, 0.06);
+      }
+
+      .nav-badge {
+        padding: 4px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        color: var(--muted2);
+        font-size: 11px;
+      }
+
+      .top-meta {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .top-meta .signal {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        color: var(--muted);
+        background: rgba(94, 234, 212, 0.05);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .signal-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 0 8px rgba(94, 234, 212, 0.08), 0 0 18px rgba(94, 234, 212, 0.45);
+      }
+
+      .hero {
+        padding: 34px 0 12px;
+      }
+
+      .hero-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) 340px;
+        gap: 22px;
+      }
+
+      .hero-panel,
+      .hero-aside,
+      .module,
+      .side-panel,
+      .pager {
+        position: relative;
+        background: linear-gradient(180deg, rgba(8, 15, 28, 0.90), rgba(8, 15, 28, 0.72));
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero-panel::before,
+      .hero-aside::before,
+      .module::before,
+      .side-panel::before,
+      .pager::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(120deg, rgba(94, 234, 212, 0.08), transparent 28%, transparent 72%, rgba(56, 189, 248, 0.05));
+      }
+
+      .hero-panel {
+        padding: 28px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--cyan);
+        font-size: 12px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 18px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(94, 234, 212, 0), rgba(94, 234, 212, 1));
+      }
+
+      .hero h1 {
+        margin: 16px 0 10px;
+        font-size: clamp(36px, 6vw, 68px);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+      }
+
+      .hero h1 span {
+        display: block;
+        color: var(--cyan);
+        text-shadow: 0 0 24px rgba(94, 234, 212, 0.18);
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 720px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+      }
+
+      .cta {
+        height: 42px;
+        padding: 0 16px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-weight: 700;
+        border: 1px solid rgba(94, 234, 212, 0.14);
+        background: rgba(94, 234, 212, 0.04);
+        color: rgba(236, 254, 255, 0.92);
+      }
+
+      .cta.primary {
+        background: linear-gradient(90deg, rgba(94, 234, 212, 0.18), rgba(56, 189, 248, 0.20));
+        box-shadow: inset 0 0 20px rgba(94, 234, 212, 0.08), 0 10px 26px rgba(56, 189, 248, 0.10);
+      }
+
+      .hero-aside {
+        padding: 20px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .stat {
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(94, 234, 212, 0.10);
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .stat small {
+        display: block;
+        color: var(--muted2);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      .stat strong {
+        display: block;
+        margin-top: 12px;
+        font-size: 24px;
+        color: rgba(236, 254, 255, 0.96);
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: minmax(0, 2.1fr) minmax(280px, 0.9fr);
+        gap: 22px;
+        padding: 18px 0 48px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .section-head strong {
+        font-size: 15px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(236, 254, 255, 0.94);
+      }
+
+      .section-head span {
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .module {
+        padding: 18px;
+      }
+
+      .post {
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid rgba(94, 234, 212, 0.10);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .post + .post {
+        margin-top: 14px;
+      }
+
+      .post-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 14px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .post h2 {
+        margin: 12px 0 10px;
+        font-size: 22px;
+        line-height: 1.22;
+      }
+
+      .post h2 a:hover {
+        color: var(--cyan);
+      }
+
+      .post p {
+        margin: 0;
+      }
+
+      .post .desc {
+        color: rgba(236, 254, 255, 0.76);
+        font-size: 14px;
+      }
+
+      .post .preview {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .post-bottom {
+        margin-top: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 234, 212, 0.14);
+        color: rgba(236, 254, 255, 0.72);
+        background: rgba(94, 234, 212, 0.04);
+        font-size: 12px;
+      }
+
+      .read {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 36px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        font-weight: 700;
+      }
+
+      .read:hover {
+        background: rgba(94, 234, 212, 0.06);
+      }
+
+      .side-panel {
+        padding: 18px;
+      }
+
+      .side-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .side-list li + li {
+        margin-top: 10px;
+      }
+
+      .side-link {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid rgba(94, 234, 212, 0.10);
+        background: rgba(255, 255, 255, 0.03);
+        transition: background 160ms ease, border-color 160ms ease, transform 120ms ease;
+      }
+
+      .side-link:hover {
+        transform: translateY(-1px);
+        background: rgba(94, 234, 212, 0.04);
+        border-color: rgba(94, 234, 212, 0.20);
+      }
+
+      .side-link strong {
+        display: block;
+        color: rgba(236, 254, 255, 0.90);
+        line-height: 1.45;
+      }
+
+      .side-link span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .pager {
+        margin-top: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        white-space: nowrap;
+      }
+
+      .pager-left {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .pager-right {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .pager-btn {
+        height: 34px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        background: rgba(94, 234, 212, 0.04);
+        color: rgba(236, 254, 255, 0.90);
+        font-weight: 700;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+      }
+
+      .pager-btn.disabled {
+        opacity: 0.42;
+      }
+
+      .pager-pages {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+      }
+
+      .page {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(236, 254, 255, 0.88);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+      }
+
+      .page.active {
+        background: linear-gradient(90deg, rgba(94, 234, 212, 0.24), rgba(56, 189, 248, 0.22));
+        color: #effcff;
+        box-shadow: inset 0 0 18px rgba(94, 234, 212, 0.08);
+      }
+
+      .page.ellipsis {
+        border: 0;
+        background: transparent;
+        color: var(--muted2);
+        min-width: auto;
+        padding: 0 4px;
+      }
+
+      .footer {
+        padding: 0 0 34px;
+        text-align: right;
+        color: var(--muted2);
+      }
+
+      .footer a {
+        color: var(--muted);
+      }
+
+      .footer a:hover {
+        color: var(--cyan);
+      }
+
+      .menu-btn {
+        display: none;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(94, 234, 212, 0.12);
+        background: rgba(94, 234, 212, 0.04);
+        color: rgba(236, 254, 255, 0.88);
+      }
+
+      @media (max-width: 1080px) {
+        .hero-shell,
+        .main {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 860px) {
+        .topbar-inner {
+          grid-template-columns: 1fr auto;
+        }
+        .top-meta {
+          display: none;
+        }
+        .menu-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .nav {
+          display: none;
+          grid-column: 1 / -1;
+          flex-direction: column;
+          align-items: stretch;
+          padding: 10px 0 6px;
+        }
+        .nav.is-open {
+          display: flex;
+        }
+        .nav-sub {
+          position: static;
+          display: block;
+          margin-top: 6px;
+        }
+        .pager-right {
+          overflow-x: auto;
+          padding-bottom: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <a class="logo" href="#" aria-label="LaneBlog">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span class="logo-copy">
+            <strong>LaneBlog</strong>
+            <span>Quantum Feed</span>
+          </span>
+        </a>
+
+        <button class="menu-btn" type="button" data-nav-toggle>菜单</button>
+
+        <nav class="nav" data-nav>
+          <div class="nav-item"><a href="#">首页</a></div>
+          <div class="nav-item">
+            <a href="#">后端</a>
+            <div class="nav-sub">
+              <a href="#">Go <span class="nav-badge">core</span></a>
+              <a href="#">MySQL <span class="nav-badge">data</span></a>
+              <a href="#">架构 <span class="nav-badge">sys</span></a>
+            </div>
+          </div>
+          <div class="nav-item">
+            <a href="#">前端</a>
+            <div class="nav-sub">
+              <a href="#">SSR <span class="nav-badge">render</span></a>
+              <a href="#">性能 <span class="nav-badge">perf</span></a>
+            </div>
+          </div>
+          <div class="nav-item"><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+        </nav>
+
+        <div class="top-meta">
+          <div class="signal"><span class="signal-dot"></span>online / feed sync</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="wrap hero-shell">
+        <div class="hero-panel">
+          <div class="eyebrow">Tech Journal Interface</div>
+          <h1>
+            <span>LaneBlog</span>
+            未来感内容首页
+          </h1>
+          <p>这一版更接近“数字操作台”，用更强的结构感、信息面板、细线框和发光边缘来体现科技感，同时保留博客应有的阅读秩序。</p>
+          <div class="hero-actions">
+            <a class="cta primary" href="#">进入文章流</a>
+            <a class="cta" href="#">浏览分类</a>
+            <a class="cta" href="#">订阅更新</a>
+          </div>
+        </div>
+
+        <aside class="hero-aside">
+          <div class="section-head">
+            <strong>站点面板</strong>
+            <span>LIVE</span>
+          </div>
+          <div class="hero-grid">
+            <div class="stat">
+              <small>Articles</small>
+              <strong>103</strong>
+            </div>
+            <div class="stat">
+              <small>Tags</small>
+              <strong>87</strong>
+            </div>
+            <div class="stat">
+              <small>Featured</small>
+              <strong>12</strong>
+            </div>
+            <div class="stat">
+              <small>Latency</small>
+              <strong>86ms</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main class="wrap main">
+      <section>
+        <div class="section-head">
+          <strong>Latest Stream</strong>
+          <span>Time Desc / Preview 100 chars</span>
+        </div>
+
+        <div class="module">
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-13</span>
+              <span>lane</span>
+              <span>后端 / Go</span>
+            </div>
+            <h2><a href="#">Go SSR 在内容站点中的最佳实践</a></h2>
+            <p class="desc">服务端渲染并不意味着保守，关键在于视觉语言与信息分层。</p>
+            <p class="preview">我们希望这套首页既有阅读效率，又能保留强烈的数字感。通过模块化分区、荧光描边、边角细节与轻量动效，可以让博客页面更像未来设备中的内容面板。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">SSR</span>
+                <span class="tag">Go</span>
+                <span class="tag">SEO</span>
+              </div>
+              <a class="read" href="#">阅读全文</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-12</span>
+              <span>lane</span>
+              <span>数据库 / MySQL</span>
+            </div>
+            <h2><a href="#">utf8mb4 与 collation 在生产环境中的统一策略</a></h2>
+            <p class="desc">字符集是内容型项目最容易被忽视、但长期收益最高的基础设施问题。</p>
+            <p class="preview">从表结构、连接参数、索引约束到应用层数据写入路径，统一字符集与排序规则不是单点动作，而是一条完整的工程链路。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">utf8mb4</span>
+                <span class="tag">MySQL</span>
+              </div>
+              <a class="read" href="#">阅读全文</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-10</span>
+              <span>lane</span>
+              <span>工程 / 后台</span>
+            </div>
+            <h2><a href="#">从管理后台到前台展示：统一 ViewModel 的价值</a></h2>
+            <p class="desc">同一份数据，不同页面呈现形式不同，但应共享清晰的数据定义。</p>
+            <p class="preview">当服务层把导航、推荐、文章预览、SEO 都组织好之后，模板就会变得简单，后续换风格也更容易，这正是本次视觉改造的基础。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">后台</span>
+                <span class="tag">ViewModel</span>
+              </div>
+              <a class="read" href="#">阅读全文</a>
+            </div>
+          </article>
+        </div>
+
+        <nav class="pager" aria-label="分页预览">
+          <div class="pager-left">10 / 11 · 103 items</div>
+          <div class="pager-right">
+            <a class="pager-btn" href="#">上一页</a>
+            <div class="pager-pages">
+              <a class="page" href="#">1</a>
+              <span class="page ellipsis">...</span>
+              <a class="page" href="#">7</a>
+              <a class="page" href="#">8</a>
+              <a class="page" href="#">9</a>
+              <span class="page active">10</span>
+              <a class="page" href="#">11</a>
+            </div>
+            <a class="pager-btn" href="#">下一页</a>
+          </div>
+        </nav>
+      </section>
+
+      <aside class="side-panel">
+        <div class="section-head">
+          <strong>Featured Titles</strong>
+          <span>recommend_type = 1</span>
+        </div>
+        <ul class="side-list">
+          <li><a class="side-link" href="#"><strong>Go 并发模型常见误区与优化思路</strong><span>FEATURED / 01</span></a></li>
+          <li><a class="side-link" href="#"><strong>从 CRUD 到服务设计：接口何时该抽象</strong><span>FEATURED / 02</span></a></li>
+          <li><a class="side-link" href="#"><strong>如何把博客首页做得更有未来感</strong><span>FEATURED / 03</span></a></li>
+          <li><a class="side-link" href="#"><strong>内容站点中的 SEO 实践清单</strong><span>FEATURED / 04</span></a></li>
+          <li><a class="side-link" href="#"><strong>日志、监控、追踪的最小可用组合</strong><span>FEATURED / 05</span></a></li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer class="wrap footer">
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a>
+    </footer>
+
+    <script>
+      (function () {
+        var toggle = document.querySelector("[data-nav-toggle]");
+        var nav = document.querySelector("[data-nav]");
+        if (!toggle || !nav) return;
+        toggle.addEventListener("click", function () {
+          nav.classList.toggle("is-open");
+        });
+      })();
+    </script>
+  </body>
+</html>

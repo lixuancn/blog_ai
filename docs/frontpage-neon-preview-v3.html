@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LaneBlog | Aurora Preview</title>
+    <meta name="description" content="LaneBlog 前台科技感首页视觉预览第三版（Aurora Glass 概念稿）。" />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eef3ff;
+        --bg2: #f7faff;
+        --panel: rgba(255, 255, 255, 0.68);
+        --panel-strong: rgba(255, 255, 255, 0.82);
+        --line: rgba(111, 140, 255, 0.12);
+        --line-strong: rgba(111, 140, 255, 0.22);
+        --text: #0f172a;
+        --muted: #52607a;
+        --muted2: #7b87a2;
+        --blue: #5b7cff;
+        --cyan: #20c6e8;
+        --pink: #f472b6;
+        --white: #ffffff;
+        --shadow: 0 24px 60px rgba(91, 124, 255, 0.12), 0 12px 30px rgba(15, 23, 42, 0.06);
+        --radius: 24px;
+        --radius-sm: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--text);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(700px 400px at 8% 10%, rgba(91, 124, 255, 0.20), transparent 60%),
+          radial-gradient(640px 360px at 84% 12%, rgba(32, 198, 232, 0.16), transparent 58%),
+          radial-gradient(540px 320px at 62% 78%, rgba(244, 114, 182, 0.12), transparent 60%),
+          linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(to right, rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(255, 255, 255, 0.24) 1px, transparent 1px);
+        background-size: 72px 72px;
+        mask-image: radial-gradient(circle at center, black 35%, transparent 100%);
+        opacity: 0.22;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1220px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .glass {
+        background: linear-gradient(180deg, var(--panel-strong), var(--panel));
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(22px) saturate(140%);
+        -webkit-backdrop-filter: blur(22px) saturate(140%);
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(18px);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.34));
+        border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+      }
+
+      .topbar-inner {
+        display: grid;
+        grid-template-columns: 260px 1fr 180px;
+        align-items: center;
+        gap: 18px;
+        min-height: 78px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        position: relative;
+        background:
+          radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.92), transparent 42%),
+          linear-gradient(135deg, rgba(91, 124, 255, 0.86), rgba(32, 198, 232, 0.74) 58%, rgba(244, 114, 182, 0.64));
+        box-shadow: 0 16px 28px rgba(91, 124, 255, 0.18);
+      }
+
+      .brand-mark::before {
+        content: "";
+        position: absolute;
+        inset: 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.58);
+      }
+
+      .brand-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.04;
+      }
+
+      .brand-copy strong {
+        font-size: 15px;
+        letter-spacing: 0.04em;
+      }
+
+      .brand-copy span {
+        margin-top: 5px;
+        font-size: 11px;
+        color: var(--muted2);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .nav-item {
+        position: relative;
+      }
+
+      .nav-item > a {
+        display: inline-flex;
+        align-items: center;
+        height: 42px;
+        padding: 0 14px;
+        border-radius: 999px;
+        color: rgba(15, 23, 42, 0.86);
+        transition: all 160ms ease;
+      }
+
+      .nav-item > a:hover {
+        background: rgba(255, 255, 255, 0.56);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.08);
+      }
+
+      .nav-sub {
+        display: none;
+        position: absolute;
+        top: 48px;
+        left: 0;
+        min-width: 220px;
+        padding: 10px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-item:hover .nav-sub,
+      .nav-item:focus-within .nav-sub {
+        display: block;
+      }
+
+      .nav-sub a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        border-radius: 12px;
+      }
+
+      .nav-sub a:hover {
+        background: rgba(91, 124, 255, 0.08);
+      }
+
+      .nav-pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(91, 124, 255, 0.08);
+        color: var(--muted2);
+        font-size: 11px;
+      }
+
+      .status {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .status-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 42px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.56);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.08);
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue), var(--cyan));
+        box-shadow: 0 0 0 8px rgba(91, 124, 255, 0.08);
+      }
+
+      .hero {
+        padding: 34px 0 14px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.6fr) 320px;
+        gap: 22px;
+      }
+
+      .hero-panel,
+      .hero-side,
+      .feed,
+      .sidebar,
+      .pager {
+        border-radius: var(--radius);
+      }
+
+      .hero-panel {
+        padding: 30px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--blue);
+        font-size: 12px;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 28px;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(91, 124, 255, 0), rgba(91, 124, 255, 1));
+      }
+
+      .hero h1 {
+        margin: 18px 0 12px;
+        font-size: clamp(38px, 6vw, 76px);
+        line-height: 0.92;
+        letter-spacing: -0.06em;
+      }
+
+      .hero h1 span {
+        display: block;
+        background: linear-gradient(90deg, var(--blue), var(--cyan) 48%, var(--pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 760px;
+        color: var(--muted);
+        font-size: 15px;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 44px;
+        padding: 0 16px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.62);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.10);
+        font-weight: 700;
+      }
+
+      .action.primary {
+        background: linear-gradient(90deg, rgba(91, 124, 255, 0.92), rgba(32, 198, 232, 0.86));
+        color: white;
+        box-shadow: 0 16px 34px rgba(91, 124, 255, 0.20);
+      }
+
+      .hero-side {
+        padding: 18px;
+      }
+
+      .metric-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+
+      .metric-head strong {
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .metric-head span {
+        color: var(--muted2);
+        font-size: 11px;
+      }
+
+      .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .metric {
+        padding: 16px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.56);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.08);
+      }
+
+      .metric small {
+        display: block;
+        color: var(--muted2);
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 14px;
+        font-size: 26px;
+      }
+
+      .main {
+        display: grid;
+        grid-template-columns: minmax(0, 2.1fr) minmax(290px, 0.95fr);
+        gap: 22px;
+        padding: 18px 0 48px;
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+
+      .section-head strong {
+        font-size: 14px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .section-head span {
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .feed {
+        padding: 18px;
+      }
+
+      .post {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.56);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.08);
+      }
+
+      .post + .post {
+        margin-top: 14px;
+      }
+
+      .post-top {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .post h2 {
+        margin: 12px 0 10px;
+        font-size: 24px;
+        line-height: 1.18;
+      }
+
+      .post h2 a:hover {
+        color: var(--blue);
+      }
+
+      .post .desc {
+        margin: 0;
+        color: #233148;
+        font-size: 14px;
+      }
+
+      .post .preview {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .post-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: rgba(91, 124, 255, 0.08);
+        color: #42536f;
+        font-size: 12px;
+      }
+
+      .readmore {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 38px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.10);
+        font-weight: 700;
+      }
+
+      .sidebar {
+        padding: 18px;
+      }
+
+      .recommend-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .recommend-list li + li {
+        margin-top: 10px;
+      }
+
+      .recommend-link {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.58);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.08);
+      }
+
+      .recommend-link:hover {
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .recommend-link strong {
+        display: block;
+        line-height: 1.45;
+      }
+
+      .recommend-link span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted2);
+        font-size: 12px;
+      }
+
+      .pager {
+        margin-top: 16px;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .pager-info {
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+        flex: 0 0 auto;
+      }
+
+      .pager-main {
+        display: inline-flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .pager-btn {
+        height: 36px;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.10);
+        color: #213049;
+        font-weight: 700;
+        font-size: 12px;
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pager-btn.disabled {
+        opacity: 0.42;
+      }
+
+      .pager-pages {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        overflow: hidden;
+      }
+
+      .page {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 10px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.74);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.10);
+        color: #213049;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+      }
+
+      .page.active {
+        background: linear-gradient(90deg, rgba(91, 124, 255, 0.96), rgba(32, 198, 232, 0.88));
+        color: white;
+        box-shadow: 0 12px 24px rgba(91, 124, 255, 0.22);
+      }
+
+      .page.ellipsis {
+        min-width: auto;
+        padding: 0 4px;
+        background: transparent;
+        box-shadow: none;
+        color: var(--muted2);
+      }
+
+      .footer {
+        padding: 0 0 36px;
+        text-align: right;
+        color: var(--muted2);
+      }
+
+      .footer a {
+        color: var(--muted);
+      }
+
+      .footer a:hover {
+        color: var(--blue);
+      }
+
+      .menu-btn {
+        display: none;
+        height: 40px;
+        padding: 0 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.62);
+        box-shadow: inset 0 0 0 1px rgba(91, 124, 255, 0.10);
+      }
+
+      @media (max-width: 1100px) {
+        .hero-grid,
+        .main {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 880px) {
+        .topbar-inner {
+          grid-template-columns: 1fr auto;
+        }
+
+        .status {
+          display: none;
+        }
+
+        .menu-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .nav {
+          display: none;
+          grid-column: 1 / -1;
+          flex-direction: column;
+          align-items: stretch;
+          padding: 10px 0 6px;
+        }
+
+        .nav.is-open {
+          display: flex;
+        }
+
+        .nav-sub {
+          position: static;
+          display: block;
+          margin-top: 6px;
+        }
+
+        .pager-main {
+          overflow-x: auto;
+          padding-bottom: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <a class="brand" href="#" aria-label="LaneBlog">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <strong>LaneBlog</strong>
+            <span>Aurora Edition</span>
+          </span>
+        </a>
+
+        <button class="menu-btn" type="button" data-nav-toggle>菜单</button>
+
+        <nav class="nav" data-nav>
+          <div class="nav-item"><a href="#">首页</a></div>
+          <div class="nav-item">
+            <a href="#">后端</a>
+            <div class="nav-sub">
+              <a href="#">Go <span class="nav-pill">core</span></a>
+              <a href="#">MySQL <span class="nav-pill">data</span></a>
+              <a href="#">架构 <span class="nav-pill">infra</span></a>
+            </div>
+          </div>
+          <div class="nav-item">
+            <a href="#">前端</a>
+            <div class="nav-sub">
+              <a href="#">SSR <span class="nav-pill">render</span></a>
+              <a href="#">性能 <span class="nav-pill">perf</span></a>
+            </div>
+          </div>
+          <div class="nav-item"><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+        </nav>
+
+        <div class="status">
+          <div class="status-card"><span class="status-dot"></span>preview / v3</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-panel glass">
+          <div class="eyebrow">Future Editorial Surface</div>
+          <h1>
+            <span>LaneBlog</span>
+            浅色未来感首页
+          </h1>
+          <p>第三版完全换了一条路线：不再延续深色赛博风，而是改成更轻盈、更高级的全息玻璃与产品官网气质。它会更干净、更新、更有“科技品牌”感。</p>
+          <div class="hero-actions">
+            <a class="action primary" href="#">开始阅读</a>
+            <a class="action" href="#">浏览推荐</a>
+            <a class="action" href="#">进入分类</a>
+          </div>
+        </div>
+
+        <aside class="hero-side glass">
+          <div class="metric-head">
+            <strong>站点面板</strong>
+            <span>live stats</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric">
+              <small>Articles</small>
+              <strong>103</strong>
+            </div>
+            <div class="metric">
+              <small>Tags</small>
+              <strong>87</strong>
+            </div>
+            <div class="metric">
+              <small>Featured</small>
+              <strong>12</strong>
+            </div>
+            <div class="metric">
+              <small>Latency</small>
+              <strong>86ms</strong>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <main class="wrap main">
+      <section>
+        <div class="section-head">
+          <strong>Latest Stream</strong>
+          <span>Clean / Bright / Premium</span>
+        </div>
+
+        <div class="feed glass">
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-13</span>
+              <span>lane</span>
+              <span>后端 / Go</span>
+            </div>
+            <h2><a href="#">Go SSR 在内容型站点中的最佳实践</a></h2>
+            <p class="desc">未来感不一定来自更暗、更重、更复杂，也可以来自更轻、更准、更像现代产品界面。</p>
+            <p class="preview">这套概念稿强调“亮色科技感”，用轻盈玻璃层、柔和渐变、清晰边框和更像产品官网的布局，让内容型首页看起来更现代、更国际化。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">SSR</span>
+                <span class="tag">Go</span>
+                <span class="tag">SEO</span>
+              </div>
+              <a class="readmore" href="#">阅读全文</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-12</span>
+              <span>lane</span>
+              <span>数据库 / MySQL</span>
+            </div>
+            <h2><a href="#">统一 utf8mb4 与 collation 的迁移策略</a></h2>
+            <p class="desc">内容项目的基础设施问题，越早收敛越轻松。</p>
+            <p class="preview">字符集迁移、连接参数、排序规则和索引边界经常被拆开讨论，但实际项目中它们应当被视为一条链路，这也是架构设计的一部分。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">utf8mb4</span>
+                <span class="tag">MySQL</span>
+              </div>
+              <a class="readmore" href="#">阅读全文</a>
+            </div>
+          </article>
+
+          <article class="post">
+            <div class="post-top">
+              <span>2026-04-10</span>
+              <span>lane</span>
+              <span>设计 / 前端</span>
+            </div>
+            <h2><a href="#">为什么科技感页面不该只有深色与霓虹</a></h2>
+            <p class="desc">真正的风格差异，不只是换颜色，而是换气质。</p>
+            <p class="preview">第一版偏霓虹、第二版偏终端控制台，这一版则偏品牌官网式未来感。它更适合想要“酷，但不吵”的内容型博客前台。</p>
+            <div class="post-bottom">
+              <div class="tags">
+                <span class="tag">设计</span>
+                <span class="tag">前台</span>
+              </div>
+              <a class="readmore" href="#">阅读全文</a>
+            </div>
+          </article>
+        </div>
+
+        <nav class="pager glass" aria-label="分页预览">
+          <div class="pager-info">10 / 11 · 103 posts</div>
+          <div class="pager-main">
+            <a class="pager-btn" href="#">上一页</a>
+            <div class="pager-pages">
+              <a class="page" href="#">1</a>
+              <span class="page ellipsis">...</span>
+              <a class="page" href="#">7</a>
+              <a class="page" href="#">8</a>
+              <a class="page" href="#">9</a>
+              <span class="page active">10</span>
+              <a class="page" href="#">11</a>
+            </div>
+            <a class="pager-btn" href="#">下一页</a>
+          </div>
+        </nav>
+      </section>
+
+      <aside class="sidebar glass">
+        <div class="section-head">
+          <strong>Featured</strong>
+          <span>recommend_type = 1</span>
+        </div>
+        <ul class="recommend-list">
+          <li><a class="recommend-link" href="#"><strong>Go 并发模型中的共享状态陷阱</strong><span>精选 / 01</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>从后台到前台：统一 ViewModel 的价值</strong><span>精选 / 02</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>内容站点的首页为什么应该更克制</strong><span>精选 / 03</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>如何把技术博客做出品牌感</strong><span>精选 / 04</span></a></li>
+          <li><a class="recommend-link" href="#"><strong>SEO 与审美并不冲突</strong><span>精选 / 05</span></a></li>
+        </ul>
+      </aside>
+    </main>
+
+    <footer class="wrap footer">
+      <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a>
+    </footer>
+
+    <script>
+      (function () {
+        var toggle = document.querySelector("[data-nav-toggle]");
+        var nav = document.querySelector("[data-nav]");
+        if (!toggle || !nav) return;
+        toggle.addEventListener("click", function () {
+          nav.classList.toggle("is-open");
+        });
+      })();
+    </script>
+  </body>
+</html>
