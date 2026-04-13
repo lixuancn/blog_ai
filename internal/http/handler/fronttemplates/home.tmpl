@@ -1,0 +1,58 @@
+{{define "home_page"}}
+{{template "site_header" .}}
+<main class="container page-grid">
+  <section class="content-area">
+    <div class="section-title">最新文章</div>
+    {{if .Articles}}
+      {{range .Articles}}
+      <article class="article-card card">
+        <div class="article-meta">
+          <span>{{formatUnix .CTime}}</span>
+          <span>作者：{{.Author}}</span>
+          <a href="{{.CategoryHref}}">分类：{{.CategoryName}}</a>
+        </div>
+        <h2><a href="{{.Link}}">{{.Title}}</a></h2>
+        <p class="description">{{.Description}}</p>
+        <p class="preview">{{.ContentPreview}}</p>
+        <div class="article-footer">
+          <div class="tags">
+            {{range .Tags}}<span class="tag">{{.}}</span>{{end}}
+          </div>
+          <a class="read-more" href="{{.Link}}">阅读全文</a>
+        </div>
+      </article>
+      {{end}}
+    {{else}}
+      <div class="card empty-state">暂无文章内容</div>
+    {{end}}
+    <nav class="pager card" aria-label="分页导航">
+      <div class="pager-summary">{{.Pagination.Page}} / {{.Pagination.TotalPages}} · 共 {{.Pagination.Total}} 篇</div>
+      <div class="pager-main">
+        {{if .Pagination.HasPrev}}
+        <a class="pager-link" href="/?page={{.Pagination.PrevPage}}" aria-label="上一页">上一页</a>
+        {{else}}
+        <span class="pager-link disabled">上一页</span>
+        {{end}}
+        <div class="pager-pages">
+          {{range .Pagination.Items}}
+            {{if .IsEllipsis}}
+            <span class="pager-page pager-ellipsis">...</span>
+            {{else if .Active}}
+            <span class="pager-page is-active">{{.Label}}</span>
+            {{else}}
+            <a class="pager-page" href="/?page={{.Page}}">{{.Label}}</a>
+            {{end}}
+          {{end}}
+        </div>
+        {{if .Pagination.HasNext}}
+        <a class="pager-link" href="/?page={{.Pagination.NextPage}}" aria-label="下一页">下一页</a>
+        {{else}}
+        <span class="pager-link disabled">下一页</span>
+        {{end}}
+      </div>
+    </nav>
+  </section>
+  {{template "sidebar" .}}
+</main>
+{{template "site_footer" .}}
+{{end}}

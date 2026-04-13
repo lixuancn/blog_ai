@@ -1,0 +1,67 @@
+{{define "site_header"}}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{.SEO.Title}}</title>
+  <meta name="description" content="{{.SEO.Description}}">
+  <meta name="keywords" content="{{.SEO.Keywords}}">
+  <link rel="stylesheet" href="/assets/front.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="/">{{.Site.Title}}</a>
+      <button class="nav-toggle" type="button" aria-label="切换导航" data-nav-toggle>菜单</button>
+      <nav class="site-nav" data-nav-panel>
+        <ul class="nav-list">
+          {{range .Navigation}}
+          <li class="nav-item{{if .Children}} has-children{{end}}">
+            <a href="{{.Href}}" {{if .External}}target="_blank" rel="noopener noreferrer"{{end}}>{{.Name}}</a>
+            {{if .Children}}
+            <ul class="nav-sublist">
+              {{range .Children}}
+              <li><a href="{{.Href}}" {{if .External}}target="_blank" rel="noopener noreferrer"{{end}}>{{.Name}}</a></li>
+              {{end}}
+            </ul>
+            {{end}}
+          </li>
+          {{end}}
+        </ul>
+      </nav>
+    </div>
+    <section class="hero">
+      <div class="container">
+        <h1>{{.HeroTitle}}</h1>
+        <p>{{.HeroSubtitle}}</p>
+      </div>
+    </section>
+  </header>
+{{end}}
+
+{{define "site_footer"}}
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备14005030号</a></p>
+    </div>
+  </footer>
+  <script src="/assets/front.js"></script>
+</body>
+</html>
+{{end}}
+
+{{define "sidebar"}}
+<aside class="sidebar card">
+  <div class="section-title">推荐阅读</div>
+  {{if .Recommendations}}
+  <ul class="recommend-list">
+    {{range .Recommendations}}
+    <li><a href="{{.Link}}">{{.Title}}</a></li>
+    {{end}}
+  </ul>
+  {{else}}
+  <div class="empty-state">暂无推荐内容</div>
+  {{end}}
+</aside>
+{{end}}

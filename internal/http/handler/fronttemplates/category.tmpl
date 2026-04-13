@@ -1,0 +1,32 @@
+{{define "category_page"}}
+{{template "site_header" .}}
+<main class="container page-grid">
+  <section class="content-area">
+    <div class="section-title">分类文章</div>
+    {{if .Articles}}
+      {{range .Articles}}
+      <article class="article-card card">
+        <div class="article-meta">
+          <span>{{formatUnix .CTime}}</span>
+          <span>作者：{{.Author}}</span>
+          <a href="{{.CategoryHref}}">分类：{{.CategoryName}}</a>
+        </div>
+        <h2><a href="{{.Link}}">{{.Title}}</a></h2>
+        <p class="description">{{.Description}}</p>
+        <p class="preview">{{.ContentPreview}}</p>
+        <div class="article-footer">
+          <div class="tags">
+            {{range .Tags}}<span class="tag">{{.}}</span>{{end}}
+          </div>
+          <a class="read-more" href="{{.Link}}">阅读全文</a>
+        </div>
+      </article>
+      {{end}}
+    {{else}}
+      <div class="card empty-state">当前分类下暂无文章</div>
+    {{end}}
+  </section>
+  {{template "sidebar" .}}
+</main>
+{{template "site_footer" .}}
+{{end}}

@@ -1,0 +1,30 @@
+{{define "article_page"}}
+{{template "site_header" .}}
+<main class="container page-grid article-layout">
+  <article class="content-area article-detail card">
+    <div class="article-meta">
+      <span>{{formatUnix .Article.CTime}}</span>
+      <span>作者：{{.Article.Author}}</span>
+      <a href="{{.Article.CategoryHref}}">分类：{{.Article.CategoryName}}</a>
+    </div>
+    <h1 class="article-title">{{.Article.Title}}</h1>
+    <p class="description">{{.Article.Description}}</p>
+    <div class="tags detail-tags">
+      {{range .Article.Tags}}<span class="tag">{{.}}</span>{{end}}
+    </div>
+    <div class="article-content">{{safeHTML .Article.Content}}</div>
+    <section class="article-stats" data-article-id="{{.Article.ID}}">
+      <div>点击：<strong data-clicks-num>{{.Article.Clicks}}</strong></div>
+      <div>点赞：<strong data-good-num>{{.Article.GoodNum}}</strong></div>
+      <div>点踩：<strong data-bad-num>{{.Article.BadNum}}</strong></div>
+    </section>
+    <section class="article-actions" data-article-id="{{.Article.ID}}">
+      <button class="action-button" type="button" data-vote="good">赞一下</button>
+      <button class="action-button secondary" type="button" data-vote="bad">踩一下</button>
+      <span class="action-message" data-action-message></span>
+    </section>
+  </article>
+  {{template "sidebar" .}}
+</main>
+{{template "site_footer" .}}
+{{end}}
